@@ -1,69 +1,106 @@
-# Welcome to your Lovable project
+# IntelliAPT 
 
-## Project info
+## **AI-Powered Token Prediction on Aptos**
+IntelliAPT is an AI-driven token price prediction platform that seamlessly integrates with the **Aptos blockchain** using **Move smart contracts**. This system leverages **machine learning** to analyze historical data and forecast future token values, ensuring **transparent, on-chain storage** of predictions.
 
-**URL**: https://lovable.dev/projects/c5e78b4e-ca37-4382-8897-3eba73015fdb
+---
 
-## How can I edit this code?
+## ** Features**
+- **Real-Time Token Prices** – Fetches live data from market sources (e.g., CoinGecko, Binance API).
+- **AI-Powered Predictions** – Uses advanced ML models (TensorFlow, Scikit-Learn) to predict future prices.
+- **On-Chain Data Storage** – Securely stores price trends and AI predictions using **Move smart contracts**.
+- **Aptos Wallet Integration** – Connects with wallets like **Petra & Martian** for secure transactions.
+- **Modern Web UI** – Responsive dashboard built with **React/Next.js** featuring live price charts.
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## ** Tech Stack**
+### **Frontend:**
+- React / Next.js
+- TailwindCSS
+- Chart.js / Recharts (for data visualization)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/c5e78b4e-ca37-4382-8897-3eba73015fdb) and start prompting.
+### **Backend:**
+- Node.js / Python (FastAPI, Flask, or Express.js)
+- AI Models (TensorFlow, Scikit-Learn)
+- Oracle Service for fetching real-time token data
 
-Changes made via Lovable will be committed automatically to this repo.
+### **Blockchain & Smart Contracts:**
+- Aptos Blockchain
+- Move Smart Contracts
+- Aptos SDK (for wallet & transaction management)
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## ** Installation & Setup**
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
+### **1️⃣ Clone the Repository**
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+  git clone https://github.com/yourusername/IntelliAPT.git
+  cd IntelliAPT
 ```
 
-**Edit a file directly in GitHub**
+### **2️⃣ Install Dependencies**
+#### **For Frontend:**
+```sh
+  cd frontend
+  npm install
+```
+#### **For Backend:**
+```sh
+  cd backend
+  pip install -r requirements.txt  # If using Python
+  npm install  # If using Node.js
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### **3️⃣ Configure Environment Variables**
+Create a `.env` file in both `frontend/` and `backend/` with API keys and configurations:
+```env
+APTOS_NETWORK=mainnet
+WALLET_PROVIDER=petra
+MARKET_DATA_API_KEY=your_api_key_here
+```
 
-**Use GitHub Codespaces**
+### **4️⃣ Run the Application**
+#### **Start Backend**
+```sh
+  cd backend
+  python app.py  # If using Python
+  node server.js  # If using Node.js
+```
+#### **Start Frontend**
+```sh
+  cd frontend
+  npm run dev
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+---
 
-## What technologies are used for this project?
+## ** Smart Contract Deployment**
+1. **Write & Compile Move Contract**
+```sh
+  aptos move compile --package-dir ./contracts
+```
+2. **Deploy to Aptos Blockchain**
+```sh
+  aptos move publish --package-dir ./contracts --profile default
+```
 
-This project is built with .
+---
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## ** API Endpoints**
+| Endpoint             | Method | Description |
+|----------------------|--------|-------------|
+| `/api/prices`        | GET    | Fetches real-time token prices |
+| `/api/predict`       | GET    | Returns AI-generated token price predictions |
+| `/api/store`         | POST   | Stores predictions on Aptos blockchain |
 
-## How can I deploy this project?
+---
 
-Simply open [Lovable](https://lovable.dev/projects/c5e78b4e-ca37-4382-8897-3eba73015fdb) and click on Share -> Publish.
+## ** Future Enhancements**
+✅ Support for **multi-token predictions**
+✅ **User dashboard** for tracking portfolio predictions
+✅ **AI model improvements** for accuracy
+✅ **More blockchain integrations** beyond Aptos
 
-## I want to use a custom domain - is that possible?
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
