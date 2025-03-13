@@ -36,7 +36,7 @@ IntelliAPT is an AI-driven token price prediction platform that seamlessly integ
 
 ### **1️⃣ Clone the Repository**
 ```sh
-  git clone https://github.com/yourusername/IntelliAPT.git
+  https://github.com/UNIk0411/Intelliapt-Token-AI.git
   cd IntelliAPT
 ```
 
