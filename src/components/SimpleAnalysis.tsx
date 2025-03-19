@@ -7,6 +7,7 @@ import { chartData } from '../lib/mockData';
 import { ArrowRight, BrainCircuit, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import PriceChart from './PriceChart';
 import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from 'react-router-dom';
 
 interface SimpleAnalysisProps {
   tokenId: string;
@@ -16,6 +17,7 @@ const SimpleAnalysis: React.FC<SimpleAnalysisProps> = ({ tokenId }) => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysis, setAnalysis] = useState<any>(null);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const runAnalysis = async () => {
     try {
@@ -65,6 +67,11 @@ const SimpleAnalysis: React.FC<SimpleAnalysisProps> = ({ tokenId }) => {
     } finally {
       setIsAnalyzing(false);
     }
+  };
+
+  // Handle navigation to detailed analysis
+  const goToDetailedAnalysis = () => {
+    navigate(`/token/${tokenId}`);
   };
   
   return (
@@ -174,7 +181,7 @@ const SimpleAnalysis: React.FC<SimpleAnalysisProps> = ({ tokenId }) => {
             </div>
           </div>
           
-          <div className="text-center mt-6">
+          <div className="flex justify-between items-center mt-6">
             <Button 
               onClick={runAnalysis}
               disabled={isAnalyzing}
@@ -182,6 +189,14 @@ const SimpleAnalysis: React.FC<SimpleAnalysisProps> = ({ tokenId }) => {
               className="border-intelliPurple text-intelliPurple hover:bg-intelliPurple/10"
             >
               {isAnalyzing ? 'Analyzing...' : 'Refresh Analysis'}
+              <ArrowRight size={16} className="ml-2" />
+            </Button>
+            
+            <Button
+              onClick={goToDetailedAnalysis}
+              className="bg-intelliPurple hover:bg-intelliPurple/90"
+            >
+              View Detailed Analysis
               <ArrowRight size={16} className="ml-2" />
             </Button>
           </div>

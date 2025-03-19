@@ -6,12 +6,14 @@ import { getPredictionHistory, storeAiPrediction } from '../services/aptosServic
 import { generatePrediction } from '../services/predictionService';
 import { chartData } from '../lib/mockData';
 import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from 'react-router-dom';
 
 const PredictionCard: React.FC = () => {
   const [predictions, setPredictions] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
   
   useEffect(() => {
     loadPredictions();
@@ -100,6 +102,10 @@ const PredictionCard: React.FC = () => {
   
   const getTokenDetails = (tokenId: string) => {
     return tokens.find(token => token.id === tokenId);
+  };
+
+  const handleViewDetailedAnalysis = (tokenId: string) => {
+    navigate(`/token/${tokenId}`);
   };
   
   if (isLoading) {
@@ -216,13 +222,13 @@ const PredictionCard: React.FC = () => {
             </div>
             
             <div className="mt-4 pt-4 border-t border-gray-800">
-              <a 
-                href={`#token-${token.id}`}
+              <button 
+                onClick={() => handleViewDetailedAnalysis(prediction.tokenId)}
                 className="text-intelliPurple hover:text-intelliPurple/80 font-medium text-sm transition-colors inline-flex items-center"
               >
                 View Detailed Analysis
                 <ArrowUpRight size={14} className="ml-1" />
-              </a>
+              </button>
             </div>
           </div>
         );
