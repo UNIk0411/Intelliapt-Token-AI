@@ -39,6 +39,7 @@ export const createPredictionModel = async (historicalPrices: number[]): Promise
   console.log("Creating prediction model...");
   
   // Generate training data
+  const windowSize = 5; // Define windowSize here
   const { X, y } = generateTrainingData(historicalPrices);
   
   // Normalize data
@@ -58,7 +59,7 @@ export const createPredictionModel = async (historicalPrices: number[]): Promise
   model.add(tf.layers.lstm({
     units: 50,
     returnSequences: false,
-    inputShape: [windowSize, 1]
+    inputShape: [windowSize, 1] // Use windowSize here
   }));
   
   model.add(tf.layers.dense({ units: 1 }));
@@ -114,7 +115,7 @@ export const generatePrediction = async ({
     const model = await createPredictionModel(historicalPrices);
     
     // Prepare input for prediction
-    const windowSize = 5;
+    const windowSize = 5; // Define windowSize here too
     const lastWindow = historicalPrices.slice(-windowSize);
     
     // Normalize
@@ -155,4 +156,3 @@ export const generatePrediction = async ({
     throw error;
   }
 };
-
