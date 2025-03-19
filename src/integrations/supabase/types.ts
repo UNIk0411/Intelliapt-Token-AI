@@ -9,7 +9,168 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      predictions: {
+        Row: {
+          confidence: number
+          created_at: string
+          current_price: number
+          id: string
+          predicted_change: number
+          predicted_price: number
+          timeframe: string
+          token_id: string
+          user_id: string | null
+        }
+        Insert: {
+          confidence: number
+          created_at?: string
+          current_price: number
+          id?: string
+          predicted_change: number
+          predicted_price: number
+          timeframe: string
+          token_id: string
+          user_id?: string | null
+        }
+        Update: {
+          confidence?: number
+          created_at?: string
+          current_price?: number
+          id?: string
+          predicted_change?: number
+          predicted_price?: number
+          timeframe?: string
+          token_id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "predictions_token_id_fkey"
+            columns: ["token_id"]
+            isOneToOne: false
+            referencedRelation: "tokens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          id: string
+          updated_at: string
+          username: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          id: string
+          updated_at?: string
+          username?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          id?: string
+          updated_at?: string
+          username?: string | null
+        }
+        Relationships: []
+      }
+      token_prices: {
+        Row: {
+          id: string
+          price: number
+          timestamp: string
+          token_id: string
+        }
+        Insert: {
+          id?: string
+          price: number
+          timestamp?: string
+          token_id: string
+        }
+        Update: {
+          id?: string
+          price?: number
+          timestamp?: string
+          token_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "token_prices_token_id_fkey"
+            columns: ["token_id"]
+            isOneToOne: false
+            referencedRelation: "tokens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tokens: {
+        Row: {
+          current_price: number
+          id: string
+          logo_url: string | null
+          market_cap: number
+          name: string
+          percent_change_24h: number
+          symbol: string
+          updated_at: string
+          volume_24h: number
+        }
+        Insert: {
+          current_price: number
+          id: string
+          logo_url?: string | null
+          market_cap: number
+          name: string
+          percent_change_24h: number
+          symbol: string
+          updated_at?: string
+          volume_24h: number
+        }
+        Update: {
+          current_price?: number
+          id?: string
+          logo_url?: string | null
+          market_cap?: number
+          name?: string
+          percent_change_24h?: number
+          symbol?: string
+          updated_at?: string
+          volume_24h?: number
+        }
+        Relationships: []
+      }
+      user_favorites: {
+        Row: {
+          created_at: string
+          id: string
+          token_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          token_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          token_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_favorites_token_id_fkey"
+            columns: ["token_id"]
+            isOneToOne: false
+            referencedRelation: "tokens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

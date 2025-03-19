@@ -1,5 +1,6 @@
 
 import * as tf from '@tensorflow/tfjs';
+import { supabase } from '@/integrations/supabase/client';
 
 // Types for prediction service
 export interface PredictionInput {
@@ -92,6 +93,36 @@ export const createPredictionModel = async (historicalPrices: number[]): Promise
   return model;
 };
 
+// Get historical prices from database
+export const fetchHistoricalPrices = async (tokenId: string, days: number = 30): Promise<number[]> => {
+  try {
+    console.log(`Fetching historical prices for ${tokenId} for last ${days} days`);
+    
+    const { data, error } = await supabase
+      .from('token_prices')
+      .select('price, timestamp')
+      .eq('token_id', tokenId)
+      .order('timestamp', { ascending: true })
+      .limit(days);
+    
+    if (error) throw error;
+    
+    // If we don't have enough data, return mock data
+    if (!data || data.length < 10) {
+      console.log("Not enough historical data, using mock data");
+      // Use the data from the chartData object instead
+      const { chartData } = await import('../lib/mockData');
+      const mockData = chartData[tokenId as keyof typeof chartData] || [];
+      return mockData.map(d => d.price);
+    }
+    
+    return data.map(d => Number(d.price));
+  } catch (error) {
+    console.error("Error fetching historical prices:", error);
+    throw error;
+  }
+};
+
 // Generate predictions using the trained model
 export const generatePrediction = async ({ 
   tokenId, 
@@ -104,9 +135,6 @@ export const generatePrediction = async ({
     if (historicalPrices.length < 10) {
       throw new Error("Not enough historical data for prediction");
     }
-    
-    // For demo purposes, we'll use a simpler approach
-    // In a real app, you'd use a more sophisticated model
     
     // Get current price (last price in the array)
     const currentPrice = historicalPrices[historicalPrices.length - 1];
@@ -142,8 +170,8 @@ export const generatePrediction = async ({
     predictionNorm.dispose();
     model.dispose();
     
-    // Return prediction result
-    return {
+    // Create prediction result
+    const result = {
       tokenId,
       currentPrice,
       predictedPrice,
@@ -151,8 +179,73 @@ export const generatePrediction = async ({
       confidence: 75 + Math.random() * 15, // Mock confidence score
       timeframe
     };
+    
+    // Store the prediction in the database
+    try {
+      await storePrediction(result);
+    } catch (storeError) {
+      console.error("Error storing prediction:", storeError);
+      // Continue even if storing fails
+    }
+    
+    return result;
   } catch (error) {
     console.error("Error generating prediction:", error);
+    throw error;
+  }
+};
+
+// Store prediction in the database
+export const storePrediction = async (prediction: PredictionResult): Promise<void> => {
+  try {
+    const { data: user } = await supabase.auth.getUser();
+    
+    const { error } = await supabase
+      .from('predictions')
+      .insert({
+        token_id: prediction.tokenId,
+        current_price: prediction.currentPrice,
+        predicted_price: prediction.predictedPrice,
+        predicted_change: prediction.predictedChange,
+        confidence: prediction.confidence,
+        timeframe: prediction.timeframe,
+        user_id: user.user?.id
+      });
+    
+    if (error) throw error;
+    
+    console.log("Prediction stored in database");
+  } catch (error) {
+    console.error("Error storing prediction:", error);
+    throw error;
+  }
+};
+
+// Get latest prediction for a token
+export const getLatestPrediction = async (tokenId: string, timeframe: string): Promise<PredictionResult | null> => {
+  try {
+    const { data, error } = await supabase
+      .from('predictions')
+      .select('*')
+      .eq('token_id', tokenId)
+      .eq('timeframe', timeframe)
+      .order('created_at', { ascending: false })
+      .limit(1);
+    
+    if (error) throw error;
+    
+    if (!data || data.length === 0) return null;
+    
+    return {
+      tokenId: data[0].token_id,
+      currentPrice: Number(data[0].current_price),
+      predictedPrice: Number(data[0].predicted_price),
+      predictedChange: Number(data[0].predicted_change),
+      confidence: Number(data[0].confidence),
+      timeframe: data[0].timeframe
+    };
+  } catch (error) {
+    console.error("Error getting latest prediction:", error);
     throw error;
   }
 };
