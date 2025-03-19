@@ -68,7 +68,7 @@ export const fetchTokenPrices = async (): Promise<TokenPrice[]> => {
         .update({ 
           current_price: newPrice,
           percent_change_24h: change * 100,
-          updated_at: new Date()
+          updated_at: new Date().toISOString() // Convert Date to ISO string
         })
         .eq('id', token.id);
       
@@ -80,7 +80,7 @@ export const fetchTokenPrices = async (): Promise<TokenPrice[]> => {
         .insert({
           token_id: token.id,
           price: newPrice,
-          timestamp: new Date()
+          timestamp: new Date().toISOString() // Convert Date to ISO string
         });
       
       if (priceError) console.error("Error inserting historical price:", priceError);

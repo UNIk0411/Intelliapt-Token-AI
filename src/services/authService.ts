@@ -121,7 +121,7 @@ export const updateProfile = async (
     const updates = {
       ...(profile.username ? { username: profile.username } : {}),
       ...(profile.avatarUrl ? { avatar_url: profile.avatarUrl } : {}),
-      updated_at: new Date()
+      updated_at: new Date().toISOString() // Convert Date to ISO string
     };
     
     const { error } = await supabase
